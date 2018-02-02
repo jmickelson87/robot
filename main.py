@@ -4,36 +4,34 @@ from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 import time
 import atexit
 mh = Adafruit_MotorHAT(addr=0x60)
-
-def turnOffMotors():
-    mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
-    mh.getMotor(2).run(Adafruit_MotorHAT.RELEASE)
-    mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
-    mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
-
-    atexit.register(turnOffMotors)
 pygame.init()
 pygame.joystick.init()
-                        #joystick_count = stick.get_count()
-                        #print("Number of joysticks: {}".format(joystick_count))
-joystick_count = pygame.joystick.get_count()
-joypos = 1
-myMotorLT = mh.getMotor(3)
-myMotorRT = mh.getMotor(4)
-loop = 1
 
+def turnOffMotors():
+    mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
+    mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
+    atexit.register(turnOffMotors)
+joystick_count = pygame.joystick.get_count()
+while (joystick_count < 1):
+    joystick_count = pygame.joystick.get_count()
+#Initialize Global Variables
+loop = True
 repeatHZ = 0
 repeatVT = 0
 axesHZ = 0
 axesVT = 0
-                        # set the speed to start, from 0 (off) to 255 (max speed)
-                        # turn on motor
-while (loop == 1):
-    for i in range (joystick_count):
 
-        joystick = pygame.joystick.Joystick(i)
-        joystick.init()
-        name = joystick.get_name()
+#Set Motor Pin numbers
+myMotorLT = mh.getMotor(3)
+myMotorRT = mh.getMotor(4)
+
+#Initialize Joysticks
+for i in range (joystick_count):
+    joystick = pygame.joystick.Joystick(i)
+    joystick.init()
+
+while (loop == True):
+
         pygame.event.pump()
         axesHZ = joystick.get_axis(0)
         axesTurn = axesHZ
@@ -67,15 +65,8 @@ while (loop == 1):
                 print ("LEFT: ",  l)
                 print ("RIGHT: ",  r)
 
-            #time.sleep(.10)
             elif (axesVT == 0 and axesHZ ==0):
                 myMotorRT.run(Adafruit_MotorHAT.RELEASE);
                 myMotorLT.run(Adafruit_MotorHAT.RELEASE);
                 print ("release")
-        """elif (axesVT < 0):
-            myMotor.run(Adafruit_MotorHAT.BACKWARD)
-            speed = (float(255)*float(axes))
-            t = int(round(speed)*(-1))
-            myMotor.setSpeed(t)
-        #print (axes)"""
 
