@@ -6,14 +6,19 @@ import atexit
 mh = Adafruit_MotorHAT(addr=0x60)
 pygame.init()
 pygame.joystick.init()
+joystick_count = pygame.joystick.get_count()
 
 def turnOffMotors():
     mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
     mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
     atexit.register(turnOffMotors)
-joystick_count = pygame.joystick.get_count()
 while (joystick_count < 1):
+    print ('Please Connect a Joy Stick: ',joystick_count)
+    pygame.quit()
+    pygame.init()
+    pygame.joystick.init()
     joystick_count = pygame.joystick.get_count()
+        
 #Initialize Global Variables
 loop = True
 repeatHZ = 0
